@@ -4,8 +4,8 @@ import Movies from "./pages/Movies/Movies";
 import Bookmarked from "./pages/Bookmarked/Bookmarked";
 import TVSeries from "./pages/TVSeries/TVSeries";
 import Login from "./pages/Login/Login";
-import SignUp from "./pages/SignUp/SignUp";
 import NotFound from "./pages/NotFound/NotFound";
+import Register from "./pages/Register/Register";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Route path="/bookmarked" element={<Bookmarked />} />
         <Route path="/tv-series" element={<TVSeries />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
