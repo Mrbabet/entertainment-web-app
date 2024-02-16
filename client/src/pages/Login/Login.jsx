@@ -1,8 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
 import styles from "./Login.module.css";
 import { useRef, useState, useEffect, useContext } from "react";
 import AuthContext from "../../context/AuthProvider";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 import axios from "../../api/axios";
 const LOGIN_URL = "/auth";
@@ -22,20 +21,17 @@ import {
 } from "@chakra-ui/react";
 
 const Login = () => {
-  const toast = useToast();
   const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const [user, setUser] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
   const [show, setShow] = useState(false);
-
-
 
   useEffect(() => {
     setErrMsg("");
-  }, [user, password]);
+  }, [userEmail, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,24 +39,19 @@ const Login = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        { user, password },
+        { email: userEmail, password },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-      setUser("");
-      setPassword("");
-      toast({
-        title: "Signing in",
-        status: "success",
-        duration: 2000,
-        position: "top",
-      });
       console.log(JSON.stringify(response?.data));
       console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
-      setAuth({ user, password, accessToken });
+      setAuth({ userEmail, password, accessToken });
+      setUserEmail("");
+      setPassword("");
+      navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
       if (!error?.response) {
@@ -92,9 +83,8 @@ const Login = () => {
             id="username"
             autoComplete="off"
             type="text"
-            onChange={(e) => setUser(e.target.value)}
-            value={user}
-            onBlur={onBlur}
+            onChange={(e) => setUserEmail(e.target.value)}
+            value={userEmail}
             required
           />
           <FormLabel htmlFor="password">Password:</FormLabel>
@@ -104,7 +94,6 @@ const Login = () => {
               placeholder="Enter password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              onBlur={onBlur}
               required
             />
             <InputRightElement width="4.5rem">

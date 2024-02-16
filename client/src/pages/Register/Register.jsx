@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import {
   FormControl,
   FormLabel,
@@ -11,18 +10,19 @@ import {
   InputRightElement,
   Heading,
   Text,
-  useToast,
 } from "@chakra-ui/react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const REGISTER_URL = '/register'
+import axios from "../../api/axios";
+const REGISTER_URL = "/register";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showMatchPassword, setShowMatchPassword] = useState(false);
 
-  const [user, setUser] = useState("");
-  const [validUsername, setValidUsername] = useState(false);
-  const [userFocus, setUserFocus] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [validUserEmail, setValidUserEmail] = useState(false);
+  const [userEmailFocus, setUserEmailFocus] = useState(false);
 
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState({
@@ -33,16 +33,15 @@ const Register = () => {
     minLength: false,
   });
   const [passwordFocus, setPasswordFocus] = useState(false);
-
   const [matchPassword, setMatchPassword] = useState("");
   const [validMatchPassword, setValidMatchPassword] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
-
   const [errMsg, setErrMsg] = useState("");
-  const [success, setSuccess] = useState(false);
 
-  const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-  const FULL_PASS_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$  /
+  const USER_EMAIL_REGEX =
+    /([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)*|\[((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|IPv6:((((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){6}|::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){5}|[0-9A-Fa-f]{0,4}::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){4}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):)?(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){3}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,2}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){2}|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,3}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,4}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::)((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3})|(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3})|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,5}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3})|(((0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}):){0,6}(0|[1-9A-Fa-f][0-9A-Fa-f]{0,3}))?::)|(?!IPv6:)[0-9A-Za-z-]*[0-9A-Za-z]:[!-Z^-~]+)])/;
+  const FULL_PASS_REGEX =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/;
   const PASS_UPPERCASE_LETTER_REGEX = /(?=.*?[A-Z])/;
   const PASS_LOWERCASE_LETTER_REGEX = /(?=.*?[a-z])/;
   const PASS_DIGIT_REGEX = /(?=.*?[0-9])/;
@@ -50,8 +49,8 @@ const Register = () => {
   const PASS_MIN_LENGTH = /.{6,}/;
 
   useEffect(() => {
-    setValidUsername(USER_REGEX.test(user));
-  }, [user]);
+    setValidUserEmail(USER_EMAIL_REGEX.test(userEmail));
+  }, [userEmail]);
 
   useEffect(() => {
     const uppercaseValid = PASS_UPPERCASE_LETTER_REGEX.test(password);
@@ -59,7 +58,7 @@ const Register = () => {
     const digitValid = PASS_DIGIT_REGEX.test(password);
     const specialCharValid = PASS_SPEC_CHAR_REGEX.test(password);
     const minLengthValid = PASS_MIN_LENGTH.test(password);
-    
+
     setValidPassword({
       uppercase: uppercaseValid,
       lowercase: lowercaseValid,
@@ -68,7 +67,6 @@ const Register = () => {
       minLength: minLengthValid,
     });
 
-
     const matchValid = password === matchPassword;
 
     setValidMatchPassword(matchValid);
@@ -76,48 +74,47 @@ const Register = () => {
 
   useEffect(() => {
     setErrMsg("");
-  }, [user, password, matchPassword]);
+  }, [userEmail, password, matchPassword]);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const v1 = USER_REGEX.test(user)
-    const v2 = FULL_PASS_REGEX.test(password)
+    const v1 = USER_EMAIL_REGEX.test(userEmail);
+    const v2 = FULL_PASS_REGEX.test(password);
+    console.log(v1, v2);
     if (!v1 || !v2) {
-      setErrMsg('Invalid entry')
-      return
+      setErrMsg("Invalid entry");
+      return;
     }
-   
+
     try {
       const response = await axios.post(
         REGISTER_URL,
-        { user, password },
+        { email: userEmail, password },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-      setUser("");
+      setUserEmail("");
       setPassword("");
       setMatchPassword("");
       console.log(JSON.stringify(response?.data));
       console.log(JSON.stringify(response?.accessToken));
-     
+      navigate("/welcome", { replace: true });
     } catch (error) {
       console.log(error);
       if (!error?.response) {
         setErrMsg("No Server Response");
       } else if (error.response?.status === 409) {
         setErrMsg("Username Taken");
-      }
-       else {
+      } else {
         setErrMsg("Registration failed");
       }
     }
   };
-
- 
-  
 
   return (
     <section onSubmit={handleSubmit}>
@@ -128,20 +125,20 @@ const Register = () => {
       )}
       <Heading>Register</Heading>
       <form>
-        <FormControl isInvalid={user && !validUsername}>
-          <FormLabel htmlFor="username">Username:</FormLabel>
+        <FormControl isInvalid={userEmail && !validUserEmail}>
+          <FormLabel htmlFor="email">Email:</FormLabel>
           <Input
-            id="username"
+            id="email"
             autoComplete="off"
             type="text"
-            onChange={(e) => setUser(e.target.value)}
-            value={user}
-            onFocus={() => setUserFocus(true)}
-            onBlur={() => setUserFocus(false)}
-            borderColor={validUsername ? "green.500" : null}
+            onChange={(e) => setUserEmail(e.target.value)}
+            value={userEmail}
+            onFocus={() => setUserEmailFocus(true)}
+            onBlur={() => setUserEmailFocus(false)}
+            borderColor={validUserEmail ? "green.500" : null}
             required
           />
-          {userFocus && user && !validUsername && (
+          {userEmailFocus && userEmail && !validUserEmail && (
             <p>
               4 to 24 characters.
               <br />
@@ -151,7 +148,12 @@ const Register = () => {
             </p>
           )}
         </FormControl>
-        <FormControl isInvalid={password &&  !(Object.values(validPassword).every(prop => prop === true)) }>
+        <FormControl
+          isInvalid={
+            password &&
+            !Object.values(validPassword).every((prop) => prop === true)
+          }
+        >
           <FormLabel htmlFor="password">Password:</FormLabel>
           <InputGroup size="md">
             <Input
@@ -162,7 +164,11 @@ const Register = () => {
               value={password}
               onFocus={() => setPasswordFocus(true)}
               onBlur={() => setPasswordFocus(false)}
-              borderColor={(Object.values(validPassword).every(prop => prop === true)) ? "green.500": null}
+              borderColor={
+                Object.values(validPassword).every((prop) => prop === true)
+                  ? "green.500"
+                  : null
+              }
               required
             />
 
@@ -202,7 +208,9 @@ const Register = () => {
               value={matchPassword}
               onFocus={() => setMatchFocus(true)}
               onBlur={() => setMatchFocus(false)}
-              borderColor={validMatchPassword ? "green.500" : null}
+              borderColor={
+                matchPassword && validMatchPassword ? "green.500" : null
+              }
               required
             />
             <InputRightElement width="4.5rem">
@@ -216,7 +224,7 @@ const Register = () => {
             </InputRightElement>
           </InputGroup>
           {!validMatchPassword && (
-           <FormErrorMessage>Passwords must be the same!</FormErrorMessage>
+            <FormErrorMessage>Passwords must be the same!</FormErrorMessage>
           )}
           <Button type="submit">Sign Up</Button>
         </FormControl>

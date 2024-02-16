@@ -12,12 +12,12 @@ const fsPromises = require("fs").promises;
 const path = require("path");
 
 const handleLogin = async (req, res) => {
-  const { user, password } = req.body;
-  if (!user || !password)
+  const { email, password } = req.body;
+  if (!email || !password)
     return res
       .status(400)
       .json({ message: "Username and password are required." });
-  const foundUser = usersDB.users.find((person) => person.username === user);
+  const foundUser = usersDB.users.find((person) => person.username === email);
   if (!foundUser) return res.sendStatus(401); //Unauthorized
   // evaluate password
   const match = await bcrypt.compare(password, foundUser.password);
