@@ -31,7 +31,7 @@ const Login = () => {
   const [success, setSuccess] = useState(false);
   const [show, setShow] = useState(false);
 
-  const onBlur = (e) => {};
+
 
   useEffect(() => {
     setErrMsg("");

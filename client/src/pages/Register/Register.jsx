@@ -14,6 +14,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
+const REGISTER_URL = '/register'
+
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showMatchPassword, setShowMatchPassword] = useState(false);
@@ -40,7 +42,7 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
 
   const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
-
+  const FULL_PASS_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$  /
   const PASS_UPPERCASE_LETTER_REGEX = /(?=.*?[A-Z])/;
   const PASS_LOWERCASE_LETTER_REGEX = /(?=.*?[a-z])/;
   const PASS_DIGIT_REGEX = /(?=.*?[0-9])/;
@@ -78,9 +80,40 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setUser("");
-    setPassword("");
-    setMatchPassword("");
+
+    const v1 = USER_REGEX.test(user)
+    const v2 = FULL_PASS_REGEX.test(password)
+    if (!v1 || !v2) {
+      setErrMsg('Invalid entry')
+      return
+    }
+   
+    try {
+      const response = await axios.post(
+        REGISTER_URL,
+        { user, password },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      setUser("");
+      setPassword("");
+      setMatchPassword("");
+      console.log(JSON.stringify(response?.data));
+      console.log(JSON.stringify(response?.accessToken));
+     
+    } catch (error) {
+      console.log(error);
+      if (!error?.response) {
+        setErrMsg("No Server Response");
+      } else if (error.response?.status === 409) {
+        setErrMsg("Username Taken");
+      }
+       else {
+        setErrMsg("Registration failed");
+      }
+    }
   };
 
  
