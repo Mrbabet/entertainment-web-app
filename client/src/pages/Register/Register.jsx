@@ -33,7 +33,7 @@ const Register = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
 
   const [matchPassword, setMatchPassword] = useState("");
-  const [validMatch, setValidMatch] = useState(false);
+  const [validMatchPassword, setValidMatchPassword] = useState(false);
   const [matchFocus, setMatchFocus] = useState(false);
 
   const [errMsg, setErrMsg] = useState("");
@@ -57,8 +57,7 @@ const Register = () => {
     const digitValid = PASS_DIGIT_REGEX.test(password);
     const specialCharValid = PASS_SPEC_CHAR_REGEX.test(password);
     const minLengthValid = PASS_MIN_LENGTH.test(password);
-    const matchValid = password === matchPassword;
-
+    
     setValidPassword({
       uppercase: uppercaseValid,
       lowercase: lowercaseValid,
@@ -66,7 +65,11 @@ const Register = () => {
       specialChar: specialCharValid,
       minLength: minLengthValid,
     });
-    setValidMatch(matchValid);
+
+
+    const matchValid = password === matchPassword;
+
+    setValidMatchPassword(matchValid);
   }, [password, matchPassword]);
 
   useEffect(() => {
@@ -80,7 +83,8 @@ const Register = () => {
     setMatchPassword("");
   };
 
-  console.log(validPassword.uppercase);
+ 
+  
 
   return (
     <section onSubmit={handleSubmit}>
@@ -105,16 +109,16 @@ const Register = () => {
             required
           />
           {userFocus && user && !validUsername && (
-            <FormErrorMessage>
+            <p>
               4 to 24 characters.
               <br />
               Must begin with a letter.
               <br />
               Letters, numbers, underscores, hyphens allowed.
-            </FormErrorMessage>
+            </p>
           )}
         </FormControl>
-        <FormControl isInvalid={password}>
+        <FormControl isInvalid={password &&  !(Object.values(validPassword).every(prop => prop === true)) }>
           <FormLabel htmlFor="password">Password:</FormLabel>
           <InputGroup size="md">
             <Input
@@ -125,6 +129,7 @@ const Register = () => {
               value={password}
               onFocus={() => setPasswordFocus(true)}
               onBlur={() => setPasswordFocus(false)}
+              borderColor={(Object.values(validPassword).every(prop => prop === true)) ? "green.500": null}
               required
             />
 
@@ -147,13 +152,13 @@ const Register = () => {
                 Special character: {validPassword.specialChar ? "✅" : "❌"}
               </li>
               <li>
-                Minimum length (6 characters):{" "}
+                Minimum length (6 characters):
                 {validPassword.minLength ? "✅" : "❌"}
               </li>
             </ul>
           )}
         </FormControl>
-        <FormControl>
+        <FormControl isInvalid={matchPassword && !validMatchPassword}>
           <FormLabel htmlFor="match_password">Match Password:</FormLabel>
           <InputGroup size="md">
             <Input
@@ -162,8 +167,9 @@ const Register = () => {
               placeholder="Enter match password"
               onChange={(e) => setMatchPassword(e.target.value)}
               value={matchPassword}
-              onFocus={() => setPasswordFocus(true)}
-              onBlur={() => setPasswordFocus(false)}
+              onFocus={() => setMatchFocus(true)}
+              onBlur={() => setMatchFocus(false)}
+              borderColor={validMatchPassword ? "green.500" : null}
               required
             />
             <InputRightElement width="4.5rem">
@@ -176,6 +182,9 @@ const Register = () => {
               </Button>
             </InputRightElement>
           </InputGroup>
+          {!validMatchPassword && (
+           <FormErrorMessage>Passwords must be the same!</FormErrorMessage>
+          )}
           <Button type="submit">Sign Up</Button>
         </FormControl>
       </form>
