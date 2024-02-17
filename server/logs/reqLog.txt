@@ -72,3 +72,5 @@
 20240217	00:22:13	7d84e691-fd5e-4c01-a311-f6bfed378199	POST	http://localhost:5173	/auth
 20240217	00:22:21	0227e6d3-783d-4a9d-ab92-4722952acd62	OPTIONS	http://localhost:5173	/auth
 20240217	00:22:21	9fa61b52-e669-4060-aee3-12b6a7472003	POST	http://localhost:5173	/auth
+20240217	15:28:16	fba4fcfb-ffe6-44c0-9740-481f2c28451f	OPTIONS	http://localhost:5173	/register
+20240217	15:28:16	37309db4-2801-4230-b340-2f6c57b3a49c	POST	http://localhost:5173	/register

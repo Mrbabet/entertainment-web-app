@@ -1,16 +1,16 @@
-.registerPage {
+.loginPage {
   width: 100vw;
   height: 100vh;
   display: grid;
   place-items: center;
 }
-.registerForm {
+.loginForm {
   background-color: #161d2f;
   padding: 24px;
   width: 327px;
   border-radius: 10px;
 }
-.registerFormContainer {
+.loginFormContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;

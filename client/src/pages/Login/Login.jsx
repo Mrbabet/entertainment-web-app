@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useContext } from "react";
 import AuthContext from "../../context/AuthProvider";
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
+import styles from "./Login.module.css";
 
 import axios from "../../api/axios";
 const LOGIN_URL = "/auth";
@@ -8,8 +9,6 @@ const LOGIN_URL = "/auth";
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
   Input,
   Button,
   InputGroup,
@@ -17,8 +16,12 @@ import {
   Heading,
   Text,
   useToast,
+  Image,
+  Flex,
+  Icon,
 } from "@chakra-ui/react";
-
+import { Link as ChakraLink } from "@chakra-ui/react";
+import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -65,47 +68,82 @@ const Login = () => {
 
   const content = (
     <>
-      <Heading>Sign In</Heading>
-      {errMsg && (
-        <Text color="red.300" my={4} fontSize="xl">
-          {errMsg}
-        </Text>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <FormControl>
-          <FormLabel htmlFor="username">Username:</FormLabel>
-          <Input
-            id="username"
-            autoComplete="off"
-            type="text"
-            onChange={(e) => setUserEmail(e.target.value)}
-            value={userEmail}
-            required
-          />
-          <FormLabel htmlFor="password">Password:</FormLabel>
-          <InputGroup size="md">
-            <Input
-              type={show ? "text" : "password"}
-              placeholder="Enter password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
+      <section className={styles.loginPage}>
+        <div className={styles.loginFormContainer}>
+          <Icon width="33" height="27" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="m26.463.408 3.2 6.4h-4.8l-3.2-6.4h-3.2l3.2 6.4h-4.8l-3.2-6.4h-3.2l3.2 6.4h-4.8l-3.2-6.4h-1.6a3.186 3.186 0 0 0-3.184 3.2l-.016 19.2a3.2 3.2 0 0 0 3.2 3.2h25.6a3.2 3.2 0 0 0 3.2-3.2V.408h-6.4Z"
+              fill="#FC4747"
             />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
-                {show ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          <Button type="submit">Sign In</Button>
-        </FormControl>
-      </form>
+          </Icon>
 
-      <p>
-        Need an Account? <br />
-        <Link to="/">Sign Up</Link>
-      </p>
+          <form noValidate className={styles.loginForm} onSubmit={handleSubmit}>
+            {errMsg && (
+              <Text color="red.300" my={4} fontSize="xl">
+                {errMsg}
+              </Text>
+            )}
+            <Heading as="h2" fontSize="xl" fontWeight={300} mb="40px">
+              Sign In
+            </Heading>
+            <FormControl mb="24px">
+              <FormLabel m={0} fontSize="xs" htmlFor="email">
+                Email:
+              </FormLabel>
+              <Input
+                id="email"
+                autoComplete="off"
+                placeholder="Email address"
+                _placeholder={{ fontSize: "sm" }}
+                style={{ caretColor: "#FC4747" }}
+                type="email"
+                onChange={(e) => setUserEmail(e.target.value)}
+                value={userEmail}
+                variant="flushed"
+                focusBorderColor="#fff"
+                required
+              />
+            </FormControl>
+            <FormControl mb="24px">
+              <FormLabel m={0} fontSize="xs" htmlFor="password">
+                Password:
+              </FormLabel>
+              <InputGroup size="md">
+                <Input
+                  placeholder="Password"
+                  _placeholder={{ fontSize: "sm" }}
+                  style={{ caretColor: "#FC4747" }}
+                  type={show ? "text" : "password"}
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                  variant="flushed"
+                  focusBorderColor="#fff"
+                  required
+                />
+                <InputRightElement>
+                  <Button bg="transparent" onClick={() => setShow(!show)}>
+                    {show ? <ViewOffIcon /> : <ViewIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+            <Flex
+              gap="24px"
+              justifyContent="center"
+              alignItems="center"
+              flexDirection="column"
+            >
+              <Button type="submit">Sign In</Button>
+              <Text>
+                Need an Account?{" "}
+                <ChakraLink as={Link} color="#FC4747" to="/register">
+                  Sign Up
+                </ChakraLink>
+              </Text>
+            </Flex>
+          </form>
+        </div>
+      </section>
     </>
   );
 
