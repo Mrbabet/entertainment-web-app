@@ -1,7 +1,6 @@
-import styles from "./Login.module.css";
 import { useRef, useState, useEffect, useContext } from "react";
 import AuthContext from "../../context/AuthProvider";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 
 import axios from "../../api/axios";
 const LOGIN_URL = "/auth";
@@ -45,15 +44,12 @@ const Login = () => {
           withCredentials: true,
         }
       );
-      console.log(JSON.stringify(response?.data));
-      console.log(JSON.stringify(response));
       const accessToken = response?.data?.accessToken;
-      setAuth({ userEmail, password, accessToken });
+      setAuth({ email: userEmail, password, accessToken });
       setUserEmail("");
       setPassword("");
       navigate("/", { replace: true });
     } catch (error) {
-      console.log(error);
       if (!error?.response) {
         setErrMsg("No Server Response");
       } else if (error.response?.status === 400) {
@@ -68,7 +64,7 @@ const Login = () => {
   };
 
   const content = (
-    <section className={styles.public}>
+    <>
       <Heading>Sign In</Heading>
       {errMsg && (
         <Text color="red.300" my={4} fontSize="xl">
@@ -110,11 +106,7 @@ const Login = () => {
         Need an Account? <br />
         <Link to="/">Sign Up</Link>
       </p>
-
-      <footer>
-        <Link to="/">Back to Home</Link>
-      </footer>
-    </section>
+    </>
   );
 
   return content;

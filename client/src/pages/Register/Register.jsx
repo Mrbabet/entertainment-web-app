@@ -12,6 +12,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { IconButton, useColorMode } from "@chakra-ui/react";
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import styles from "./Register.module.css";
 
 import axios from "../../api/axios";
 const REGISTER_URL = "/register";
@@ -115,16 +118,24 @@ const Register = () => {
       }
     }
   };
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <section onSubmit={handleSubmit}>
+    <section className={styles.registerPage}>
       {errMsg && (
         <Text color="red.300" my={4} fontSize="xl">
           {errMsg}
         </Text>
       )}
-      <Heading>Register</Heading>
-      <form>
+
+      {/* <IconButton
+        aria-label="Toggle theme"
+        icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        onClick={toggleColorMode}
+      /> */}
+
+      <form className={styles.registerForm} onSubmit={handleSubmit}>
+        <Heading>Sign Up</Heading>
         <FormControl isInvalid={userEmail && !validUserEmail}>
           <FormLabel htmlFor="email">Email:</FormLabel>
           <Input
@@ -173,11 +184,7 @@ const Register = () => {
             />
 
             <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={() => setShowPassword(!showPassword)}
-              >
+              <Button onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? "Hide" : "Show"}
               </Button>
             </InputRightElement>
@@ -198,12 +205,12 @@ const Register = () => {
           )}
         </FormControl>
         <FormControl isInvalid={matchPassword && !validMatchPassword}>
-          <FormLabel htmlFor="match_password">Match Password:</FormLabel>
+          <FormLabel htmlFor="confirm_password">Match Password:</FormLabel>
           <InputGroup size="md">
             <Input
-              id="match_password"
+              id="confirm_password"
               type={showMatchPassword ? "text" : "password"}
-              placeholder="Enter match password"
+              placeholder="Confirm password"
               onChange={(e) => setMatchPassword(e.target.value)}
               value={matchPassword}
               onFocus={() => setMatchFocus(true)}
@@ -214,11 +221,7 @@ const Register = () => {
               required
             />
             <InputRightElement width="4.5rem">
-              <Button
-                h="1.75rem"
-                size="sm"
-                onClick={() => setShowMatchPassword(!showMatchPassword)}
-              >
+              <Button onClick={() => setShowMatchPassword(!showMatchPassword)}>
                 {showMatchPassword ? "Hide" : "Show"}
               </Button>
             </InputRightElement>
@@ -226,7 +229,10 @@ const Register = () => {
           {!validMatchPassword && (
             <FormErrorMessage>Passwords must be the same!</FormErrorMessage>
           )}
-          <Button type="submit">Sign Up</Button>
+          <Button type="submit">Create an account</Button>
+          <p>
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
         </FormControl>
       </form>
     </section>

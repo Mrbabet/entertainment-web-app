@@ -1,0 +1,15 @@
+.registerPage {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+.registerForm {
+  background-color: #161d2f;
+  padding: 24px;
+  margin: 24px;
+  height: 420px;
+  width: 100%;
+  max-width: 327px;
+  border-radius: 10px;
+}

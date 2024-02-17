@@ -15,22 +15,23 @@ function App() {
     <>
       <Routes>
         {/* Public routes */}
-
-        <Route path="/welcome" element={<Welcome />}>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/" element={<Layout />}>
+          <Route path="/welcome" element={<Welcome />} />
+
+          <Route path="/" element={<Home />} />
+          <Route path="/movies" element={<Movies />} />
+          <Route path="/bookmarked" element={<Bookmarked />} />
+          <Route path="/tv-series" element={<TVSeries />} />
+
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
-            <Route index path="/" element={<Home />} />
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/bookmarked" element={<Bookmarked />} />
-            <Route path="/tv-series" element={<TVSeries />} />
+            {/* Ready to add protected Routes */}
           </Route>
           {/* 404 */}
-          <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
