@@ -12,6 +12,10 @@ import {
   Text,
   Flex,
   Icon,
+  List,
+  ListItem,
+  ListIcon,
+  Box,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { IconButton, useColorMode } from "@chakra-ui/react";
@@ -24,7 +28,7 @@ import {
   CheckCircleIcon,
 } from "@chakra-ui/icons";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import styles from "./Register.module.css";
+import styled from "@emotion/styled";
 
 import axios from "../../api/axios";
 const REGISTER_URL = "/register";
@@ -130,9 +134,13 @@ const Register = () => {
   };
   const { colorMode, toggleColorMode } = useColorMode();
 
+  const Form = styled.form`
+    width: 100%;
+  `;
+
   return (
     <>
-      <section className={styles.registerPage}>
+      <Box w="100vw" h="100vh" display="grid" placeItems="center">
         <IconButton
           aria-label="Toggle theme"
           position={"absolute"}
@@ -140,199 +148,206 @@ const Register = () => {
           icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           onClick={toggleColorMode}
         />
-        <div className={styles.registerFormContainer}>
+        <Flex gap="60px" flexDirection="column" margin="24px">
           <Icon width="33" height="27" xmlns="http://www.w3.org/2000/svg">
             <path
               d="m26.463.408 3.2 6.4h-4.8l-3.2-6.4h-3.2l3.2 6.4h-4.8l-3.2-6.4h-3.2l3.2 6.4h-4.8l-3.2-6.4h-1.6a3.186 3.186 0 0 0-3.184 3.2l-.016 19.2a3.2 3.2 0 0 0 3.2 3.2h25.6a3.2 3.2 0 0 0 3.2-3.2V.408h-6.4Z"
               fill="#FC4747"
             />
           </Icon>
-
-          <form
-            noValidate
-            className={styles.registerForm}
-            onSubmit={handleSubmit}
+          <Box
+            bg="#161D2F"
+            borderRadius="10px"
+            p={("24px", "32px")}
+            w={[327, 400]}
           >
-            {errMsg && (
-              <Text color="red.300" my={4} fontSize="xl">
-                {errMsg}
-              </Text>
-            )}
-            <Heading as="h2" fontSize="xl" fontWeight={300} mb="40px">
-              Sign Up
-            </Heading>
-            <FormControl mb="24px" isInvalid={userEmail && !validUserEmail}>
-              <FormLabel m={0} htmlFor="email" fontSize="xs">
-                Email:
-              </FormLabel>
-              <Input
-                id="email"
-                autoComplete="off"
-                placeholder="Email address"
-                _placeholder={{ fontSize: "sm" }}
-                style={{ caretColor: "#FC4747" }}
-                type="text"
-                onChange={(e) => setUserEmail(e.target.value)}
-                value={userEmail}
-                onFocus={() => setUserEmailFocus(true)}
-                onBlur={() => setUserEmailFocus(false)}
-                borderColor={validUserEmail ? "green.500" : null}
-                focusBorderColor="#fff"
-                variant="flushed"
-                required
-              />
-              {userEmailFocus && userEmail && !validUserEmail && (
-                <p>Wrong email address</p>
+            <Form onSubmit={handleSubmit}>
+              {errMsg && (
+                <Text color="red.300" my={4} fontSize="xl">
+                  {errMsg}
+                </Text>
               )}
-            </FormControl>
-            <FormControl
-              mb="24px"
-              isInvalid={
-                password &&
-                !Object.values(validPassword).every((prop) => prop === true)
-              }
-            >
-              <FormLabel m={0} htmlFor="password" fontSize="xs">
-                Password:
-              </FormLabel>
-              <InputGroup>
+              <Heading as="h2" fontSize="xl" fontWeight={300} mb="40px">
+                Sign Up
+              </Heading>
+              <FormControl mb="24px" isInvalid={userEmail && !validUserEmail}>
+                <FormLabel m={0} htmlFor="email" fontSize="xs">
+                  Email:
+                </FormLabel>
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  id="email"
+                  autoComplete="off"
+                  placeholder="Email address"
                   _placeholder={{ fontSize: "sm" }}
                   style={{ caretColor: "#FC4747" }}
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
-                  onFocus={() => setPasswordFocus(true)}
-                  onBlur={() => setPasswordFocus(false)}
-                  borderColor={
-                    Object.values(validPassword).every((prop) => prop === true)
-                      ? "green.500"
-                      : null
-                  }
+                  type="text"
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  value={userEmail}
+                  onFocus={() => setUserEmailFocus(true)}
+                  onBlur={() => setUserEmailFocus(false)}
+                  borderColor={validUserEmail ? "green.500" : null}
                   focusBorderColor="#fff"
                   variant="flushed"
                   required
                 />
-
-                <InputRightElement>
-                  <Button
-                    bg="transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              {passwordFocus && password && (
-                <ul>
-                  <li>
-                    Uppercase letter:{" "}
-                    {validPassword.uppercase ? (
-                      <CheckCircleIcon color="green.500" />
-                    ) : (
-                      <WarningIcon color="red.500" />
-                    )}
-                  </li>
-                  <li>
-                    Lowercase letter:{" "}
-                    {validPassword.lowercase ? (
-                      <CheckCircleIcon color="green.500" />
-                    ) : (
-                      <WarningIcon color="red.500" />
-                    )}
-                  </li>
-                  <li>
-                    Digit:{" "}
-                    {validPassword.digit ? (
-                      <CheckCircleIcon color="green.500" />
-                    ) : (
-                      <WarningIcon color="red.500" />
-                    )}
-                  </li>
-                  <li>
-                    Special character:{" "}
-                    {validPassword.specialChar ? (
-                      <CheckCircleIcon color="green.500" />
-                    ) : (
-                      <WarningIcon color="red.500" />
-                    )}
-                  </li>
-                  <li>
-                    Minimum length (6 characters):{" "}
-                    {validPassword.minLength ? (
-                      <CheckCircleIcon color="green.500" />
-                    ) : (
-                      <WarningIcon color="red.500" />
-                    )}
-                  </li>
-                </ul>
-              )}
-            </FormControl>
-            <FormControl
-              mb="24px"
-              isInvalid={matchPassword && !validMatchPassword}
-            >
-              <FormLabel m={0} htmlFor="confirm_password" fontSize="xs">
-                Confirm Password:
-              </FormLabel>
-              <InputGroup size="md">
-                <Input
-                  id="confirm_password"
-                  type={showMatchPassword ? "text" : "password"}
-                  onChange={(e) => setMatchPassword(e.target.value)}
-                  value={matchPassword}
-                  placeholder="Confirm password"
-                  _placeholder={{ fontSize: "sm" }}
-                  style={{ caretColor: "#FC4747" }}
-                  onFocus={() => setMatchFocus(true)}
-                  onBlur={() => setMatchFocus(false)}
-                  focusBorderColor="#fff"
-                  borderColor={
-                    matchPassword && validMatchPassword ? "green.500" : null
-                  }
-                  variant="flushed"
-                  required
-                />
-                <InputRightElement>
-                  <Button
-                    bg="transparent"
-                    onClick={() => setShowMatchPassword(!showMatchPassword)}
-                  >
-                    {showMatchPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              {!validMatchPassword && (
-                <FormErrorMessage>Passwords must be the same!</FormErrorMessage>
-              )}
-            </FormControl>
-            <Flex
-              gap="24px"
-              justifyContent="center"
-              alignItems="center"
-              flexDirection="column"
-            >
-              <Button
-                fontSize="sm"
-                fontWeight={300}
-                width="100%"
-                height="48px"
-                type="submit"
+                {userEmailFocus && userEmail && !validUserEmail && (
+                  <FormErrorMessage>Wrong email address</FormErrorMessage>
+                )}
+              </FormControl>
+              <FormControl
+                mb="24px"
+                isInvalid={
+                  password &&
+                  !Object.values(validPassword).every((prop) => prop === true)
+                }
               >
-                Create an account
-              </Button>
-              <Text>
-                Already have an account?{" "}
-                <ChakraLink as={Link} color="#FC4747" to="/login">
-                  Sign In
-                </ChakraLink>
-              </Text>
-            </Flex>
-          </form>
-        </div>
-      </section>
+                <FormLabel m={0} htmlFor="password" fontSize="xs">
+                  Password:
+                </FormLabel>
+                <InputGroup>
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    _placeholder={{ fontSize: "sm" }}
+                    style={{ caretColor: "#FC4747" }}
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    onFocus={() => setPasswordFocus(true)}
+                    onBlur={() => setPasswordFocus(false)}
+                    borderColor={
+                      Object.values(validPassword).every(
+                        (prop) => prop === true
+                      )
+                        ? "green.500"
+                        : null
+                    }
+                    focusBorderColor="#fff"
+                    variant="flushed"
+                    required
+                  />
+
+                  <InputRightElement>
+                    <Button
+                      bg="transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+                {passwordFocus && password && (
+                  <List spacing={3}>
+                    <ListItem>
+                      {validPassword.uppercase ? (
+                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                      ) : (
+                        <ListIcon as={WarningIcon} color="red.500" />
+                      )}
+                      Uppercase letter
+                    </ListItem>
+                    <ListItem>
+                      {validPassword.lowercase ? (
+                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                      ) : (
+                        <ListIcon as={WarningIcon} color="red.500" />
+                      )}
+                      Lowercase letter
+                    </ListItem>
+                    <ListItem>
+                      {validPassword.digit ? (
+                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                      ) : (
+                        <ListIcon as={WarningIcon} color="red.500" />
+                      )}
+                      Digit
+                    </ListItem>
+                    <ListItem>
+                      {validPassword.specialChar ? (
+                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                      ) : (
+                        <ListIcon as={WarningIcon} color="red.500" />
+                      )}
+                      Special charakter
+                    </ListItem>
+                    <ListItem>
+                      {validPassword.minLength ? (
+                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                      ) : (
+                        <ListIcon as={WarningIcon} color="red.500" />
+                      )}
+                      Minimum length (6 characters)
+                    </ListItem>
+                  </List>
+                )}
+              </FormControl>
+              <FormControl
+                mb="24px"
+                isInvalid={matchPassword && !validMatchPassword}
+              >
+                <FormLabel m={0} htmlFor="confirm_password" fontSize="xs">
+                  Confirm Password:
+                </FormLabel>
+                <InputGroup size="md">
+                  <Input
+                    id="confirm_password"
+                    type={showMatchPassword ? "text" : "password"}
+                    onChange={(e) => setMatchPassword(e.target.value)}
+                    value={matchPassword}
+                    placeholder="Confirm password"
+                    _placeholder={{ fontSize: "sm" }}
+                    style={{ caretColor: "#FC4747" }}
+                    onFocus={() => setMatchFocus(true)}
+                    onBlur={() => setMatchFocus(false)}
+                    focusBorderColor="#fff"
+                    borderColor={
+                      matchPassword && validMatchPassword ? "green.500" : null
+                    }
+                    variant="flushed"
+                    required
+                  />
+                  <InputRightElement>
+                    <Button
+                      bg="transparent"
+                      onClick={() => setShowMatchPassword(!showMatchPassword)}
+                    >
+                      {showMatchPassword ? <ViewOffIcon /> : <ViewIcon />}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+                {!validMatchPassword && (
+                  <FormErrorMessage>
+                    Passwords must be the same!
+                  </FormErrorMessage>
+                )}
+              </FormControl>
+              <Flex
+                gap="24px"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+              >
+                <Button
+                  variant="primary"
+                  fontSize="sm"
+                  fontWeight={300}
+                  width="100%"
+                  height="48px"
+                  type="submit"
+                >
+                  Create an account
+                </Button>
+                <Text>
+                  Already have an account?{" "}
+                  <ChakraLink as={Link} color="#FC4747" to="/login">
+                    Sign In
+                  </ChakraLink>
+                </Text>
+              </Flex>
+            </Form>
+          </Box>
+        </Flex>
+      </Box>
     </>
   );
 };
