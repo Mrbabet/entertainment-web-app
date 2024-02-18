@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 
 import React from "react";
 import Navigation from "../Navigation/Navigation";
-Navigation;
 
 const Layout = () => {
   return (

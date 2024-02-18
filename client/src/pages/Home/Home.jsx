@@ -1,17 +1,17 @@
 import axios from "../../api/axios";
 
 import SearchBar from "../../components/SearchBar/SearchBar";
+import Trending from "../../components/Trending/Trending";
+import Section from "../../components/Section/Section";
 
 const Home = () => {
-  const fetchData = async () => {
-    const response = await axios.get("/movie");
-    console.log(response.data);
-  };
-  fetchData();
   return (
     <>
       <SearchBar />
-      <main></main>
+      <Section title="Trending">
+        <Trending />
+      </Section>
+      <Section title="Recomended for you"></Section>
     </>
   );
 };

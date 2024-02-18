@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
 import {
   IconHome,
   IconBookmark,
