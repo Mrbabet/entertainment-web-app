@@ -19,10 +19,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
             {/* Ready to add protected Routes */}
-            <Route path="/" element={<Home />} />
+
             <Route path="/movies" element={<Movies />} />
             <Route path="/bookmarked" element={<Bookmarked />} />
             <Route path="/tv-series" element={<TVSeries />} />

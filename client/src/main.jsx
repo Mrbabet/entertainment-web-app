@@ -47,7 +47,7 @@ const theme = extendTheme({
           color: "#fff",
           _hover: {
             bg: "#fff",
-            color: "161D2F",
+            color: "#161D2F",
           },
         },
       },

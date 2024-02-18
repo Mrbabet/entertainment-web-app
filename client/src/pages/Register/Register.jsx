@@ -331,8 +331,8 @@ const Register = () => {
                   variant="primary"
                   fontSize="sm"
                   fontWeight={300}
-                  width="100%"
-                  height="48px"
+                  w="100%"
+                  h="48px"
                   type="submit"
                 >
                   Create an account
