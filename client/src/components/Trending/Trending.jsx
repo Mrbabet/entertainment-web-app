@@ -2,9 +2,11 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import MovieCardTrending from "../MovieCardTrending/MovieCardTrending";
-import { List, ListItem } from "@chakra-ui/react";
+import { List, ListItem ,Box} from "@chakra-ui/react";
 import axios from "../../api/axios";
 import movieData from "../../data/data.json";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 
 const Trending = () => {
   const [data, setData] = useState([]);
@@ -28,11 +30,14 @@ const Trending = () => {
 
   return (
     <>
-      <List>
+ 
+ <Swiper width={240}>
         {data.map((movie) => {
           return (
             movie.isTrending && (
-              <ListItem
+             
+              <SwiperSlide>
+              <Box
                 year={movie.year}
                 category={movie.category}
                 rating={movie.rating}
@@ -41,10 +46,15 @@ const Trending = () => {
                 key={movie.title}
                 as={MovieCardTrending}
               />
+              </SwiperSlide>
+             
+              
             )
           );
         })}
-      </List>
+         </Swiper>
+      
+     
     </>
   );
 };
