@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 
 import MovieCard from "../MovieCard/MovieCard";
@@ -15,39 +14,35 @@ import {
 
 import axios from "axios";
 
-const Trending = () => {
+const FreeToWatch = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedTab, setSelectedTab] = useState("day");
+  const [selectedTab, setSelectedTab] = useState("movies");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/trending/all/${selectedTab}`,
-          {
-            params: { language: "en-US" },
-            headers: {
-              accept: "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN_AUTH}`,
-            },
-          }
-        );
+        const response = await axios.get(`https://api.themoviedb.org/3/movie`, {
+          params: { language: "en-US" },
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN_AUTH}`,
+          },
+        });
         setData(response.data.results);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
       }
     };
     fetchData();
   }, [selectedTab]);
 
-  console.log(loading);
+  console.log(data);
   const handleTabChange = (index) => {
-    setSelectedTab(index === 0 ? "day" : "week");
+    setSelectedTab(index === 0 ? "movies" : "tv");
   };
 
   return (
@@ -56,8 +51,8 @@ const Trending = () => {
 
       <Tabs onChange={handleTabChange}>
         <TabList>
-          <Tab>Day</Tab>
-          <Tab>Week</Tab>
+          <Tab>Movies</Tab>
+          <Tab>Tv</Tab>
         </TabList>
         {loading && (
           <Spinner size="xl" thickness="4px" color="teal.500" margin="auto" />
@@ -111,4 +106,4 @@ const Trending = () => {
   );
 };
 
-export default Trending;
+export default FreeToWatch;

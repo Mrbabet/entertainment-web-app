@@ -4,8 +4,8 @@ import React from "react";
 const Section = ({ children, title }) => {
   return (
     <>
-      <Box>
-        <Heading fontWeight={300} fontSize="20px">
+      <Box mt={"24px"} as="section">
+        <Heading mb={"24px"} fontWeight={300} fontSize="20px">
           {title}
         </Heading>
         {children}
