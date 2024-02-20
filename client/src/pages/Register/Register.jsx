@@ -3,7 +3,6 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  FormHelperText,
   Input,
   Button,
   InputGroup,
@@ -134,10 +133,6 @@ const Register = () => {
   };
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const Form = styled.form`
-    width: 100%;
-  `;
-
   return (
     <>
       <Box w="100vw" h="100vh" display="grid" placeItems="center">
@@ -161,7 +156,7 @@ const Register = () => {
             p={("24px", "32px")}
             w={[327, 400]}
           >
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               {errMsg && (
                 <Text color="red.300" my={4} fontSize="xl">
                   {errMsg}
@@ -176,15 +171,15 @@ const Register = () => {
                 </FormLabel>
                 <Input
                   id="email"
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  value={userEmail}
+                  onFocus={() => setUserEmailFocus(true)}
+                  onBlur={() => setUserEmailFocus(false)}
                   autoComplete="off"
                   placeholder="Email address"
                   _placeholder={{ fontSize: "sm" }}
                   style={{ caretColor: "#FC4747" }}
                   type="text"
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  value={userEmail}
-                  onFocus={() => setUserEmailFocus(true)}
-                  onBlur={() => setUserEmailFocus(false)}
                   borderColor={validUserEmail ? "green.500" : null}
                   focusBorderColor="#fff"
                   variant="flushed"
@@ -207,14 +202,14 @@ const Register = () => {
                 <InputGroup>
                   <Input
                     id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    _placeholder={{ fontSize: "sm" }}
-                    style={{ caretColor: "#FC4747" }}
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                     onFocus={() => setPasswordFocus(true)}
                     onBlur={() => setPasswordFocus(false)}
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    _placeholder={{ fontSize: "sm" }}
+                    style={{ caretColor: "#FC4747" }}
                     borderColor={
                       Object.values(validPassword).every(
                         (prop) => prop === true
@@ -291,14 +286,14 @@ const Register = () => {
                 <InputGroup size="md">
                   <Input
                     id="confirm_password"
-                    type={showMatchPassword ? "text" : "password"}
                     onChange={(e) => setMatchPassword(e.target.value)}
                     value={matchPassword}
+                    onFocus={() => setMatchFocus(true)}
+                    onBlur={() => setMatchFocus(false)}
+                    type={showMatchPassword ? "text" : "password"}
                     placeholder="Confirm password"
                     _placeholder={{ fontSize: "sm" }}
                     style={{ caretColor: "#FC4747" }}
-                    onFocus={() => setMatchFocus(true)}
-                    onBlur={() => setMatchFocus(false)}
                     focusBorderColor="#fff"
                     borderColor={
                       matchPassword && validMatchPassword ? "green.500" : null
@@ -344,7 +339,7 @@ const Register = () => {
                   </ChakraLink>
                 </Text>
               </Flex>
-            </Form>
+            </form>
           </Box>
         </Flex>
       </Box>

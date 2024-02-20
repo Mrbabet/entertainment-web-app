@@ -49,33 +49,17 @@ const options = {
     "content-type": "application/json",
     Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
   },
+  data: {
+    redirect_to: "http://localhost:5173/welcome",
+  },
 };
-
-app.get("/request-token-tmdb", async (req, res) => {
-  try {
-    const response = await axios.get(
-      "https://api.themoviedb.org/3/authentication/token/new",
-      {
-        params: {
-          api_key: process.env.TMDB_API_KEY,
-        },
-      }
-    );
-    const requestToken = response.data.request_token;
-    res.redirect(
-      `https://www.themoviedb.org/auth/access?request_token=${requestToken}`
-    );
-  } catch (error) {
-    console.error("Error obtaining request token:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 
 app.get("/create-token", async (req, res) => {
   try {
     const response = await axios.request(options);
     const requestToken = response.data.request_token;
-    console.log(requestToken);
+    getAccessTokenOptions.data.request_token = requestToken;
+
     res.redirect(
       `https://www.themoviedb.org/auth/access?request_token=${requestToken}`
     );
@@ -84,6 +68,48 @@ app.get("/create-token", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+const getAccessTokenOptions = {
+  method: "POST",
+  url: "https://api.themoviedb.org/4/auth/access_token",
+  headers: {
+    accept: "application/json",
+    "content-type": "application/json",
+    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+  },
+  data: {
+    request_token: null,
+  },
+};
+
+app.get("/get-access-token", async (req, res) => {
+  try {
+    const response = await axios.request(getAccessTokenOptions);
+    const accessToken = response.data.access_token;
+
+    res.json({ access_token: accessToken });
+  } catch (error) {
+    console.error("Error obtaining access token:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+const logoutOptions = {
+  method: "DELETE",
+  url: "https://api.themoviedb.org/4/auth/access_token",
+  headers: {
+    accept: "application/json",
+    "content-type": "application/json",
+    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+  },
+};
+
+app.delete("/logout-tmdb"),
+  async (req, res) => {
+    await axios.request(logoutOptions);
+    res.json({ message: "Logout successful" });
+    try {
+    } catch (error) {}
+  };
 
 app.use(verifyJWT);
 app.use("/employees", require("./routes/api/employees"));

@@ -21,7 +21,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Link as ChakraLink } from "@chakra-ui/react";
-import { SunIcon, MoonIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import styled from "@emotion/styled";
 
 const Login = () => {
@@ -67,9 +67,7 @@ const Login = () => {
       }
     }
   };
-  const Form = styled.form`
-    width: 100%;
-  `;
+
   const content = (
     <>
       <Box width="100vw" height="100vh" display="grid" placeItems="center">
@@ -86,7 +84,7 @@ const Login = () => {
             p={("24px", "32px")}
             w={[327, 400]}
           >
-            <Form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               {errMsg && (
                 <Text color="red.300" my={4} fontSize="xl">
                   {errMsg}
@@ -101,13 +99,13 @@ const Login = () => {
                 </FormLabel>
                 <Input
                   id="email"
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  value={userEmail}
                   autoComplete="off"
                   placeholder="Email address"
                   _placeholder={{ fontSize: "sm" }}
                   style={{ caretColor: "#FC4747" }}
                   type="email"
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  value={userEmail}
                   variant="flushed"
                   focusBorderColor="#fff"
                   required
@@ -159,7 +157,7 @@ const Login = () => {
                   </ChakraLink>
                 </Text>
               </Flex>
-            </Form>
+            </form>
           </Box>
         </Flex>
       </Box>

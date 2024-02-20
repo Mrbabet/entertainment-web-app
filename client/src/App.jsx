@@ -1,39 +1,39 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Movies from "./pages/Movies/Movies";
-import Bookmarked from "./pages/Bookmarked/Bookmarked";
-import TVSeries from "./pages/TVSeries/TVSeries";
-import Login from "./pages/Login/Login";
+import React, { Suspense } from "react";
+
 import NotFound from "./pages/NotFound/NotFound";
-import Register from "./pages/Register/Register";
 import Layout from "./components/Layout/Layout";
 import Welcome from "./pages/Welcome/Welcome";
 import RequireAuth from "./components/RequireAuth/RequireAuth";
 
+const Home = React.lazy(() => import("./pages/Home/Home"));
+const Movies = React.lazy(() => import("./pages/Movies/Movies"));
+const Bookmarked = React.lazy(() => import("./pages/Bookmarked/Bookmarked"));
+const TVSeries = React.lazy(() => import("./pages/TVSeries/TVSeries"));
+const Login = React.lazy(() => import("./pages/Login/Login"));
+const Register = React.lazy(() => import("./pages/Register/Register"));
+
 function App() {
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         {/* Public routes */}
         <Route path="/welcome" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Home />} />
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
-            {/* Ready to add protected Routes */}
-
+            <Route path="/" element={<Home />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/bookmarked" element={<Bookmarked />} />
             <Route path="/tv-series" element={<TVSeries />} />
           </Route>
-          {/* 404 */}
         </Route>
+        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
+    </Suspense>
   );
 }
-
 export default App;
