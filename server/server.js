@@ -1,7 +1,9 @@
 const express = require("express");
+const axios = require("axios");
 const app = express();
 const path = require("path");
 const cors = require("cors");
+require("dotenv").config();
 const corsOptions = require("./config/corsOptions");
 const verifyJWT = require("./middleware/verifyJWT");
 const cookieParser = require("cookie-parser");
@@ -38,6 +40,50 @@ app.use("/auth", require("./routes/auth"));
 app.use("/refresh", require("./routes/refresh"));
 app.use("/logout", require("./routes/logout"));
 app.use("/movie", require("./routes/api/movie"));
+
+const options = {
+  method: "POST",
+  url: "https://api.themoviedb.org/4/auth/request_token",
+  headers: {
+    accept: "application/json",
+    "content-type": "application/json",
+    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
+  },
+};
+
+app.get("/request-token-tmdb", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/authentication/token/new",
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+        },
+      }
+    );
+    const requestToken = response.data.request_token;
+    res.redirect(
+      `https://www.themoviedb.org/auth/access?request_token=${requestToken}`
+    );
+  } catch (error) {
+    console.error("Error obtaining request token:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/create-token", async (req, res) => {
+  try {
+    const response = await axios.request(options);
+    const requestToken = response.data.request_token;
+    console.log(requestToken);
+    res.redirect(
+      `https://www.themoviedb.org/auth/access?request_token=${requestToken}`
+    );
+  } catch (error) {
+    console.error("Error obtaining request token:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.use(verifyJWT);
 app.use("/employees", require("./routes/api/employees"));
