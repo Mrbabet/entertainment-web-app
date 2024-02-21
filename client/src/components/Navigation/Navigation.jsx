@@ -39,9 +39,9 @@ const Navigation = () => {
               </ChakraLink>
             </ListItem>
             <ListItem>
-              <ChakraLink as={Link} to="/movies">
+              <ChakraLink as={Link} to="/movie">
                 <ListIcon
-                  color={location.pathname === "/movies" ? "#fff" : "#5A698F"}
+                  color={location.pathname === "/movie" ? "#fff" : "#5A698F"}
                   boxSize={6}
                   m={0}
                   as={IconMovies}

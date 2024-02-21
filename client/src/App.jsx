@@ -5,6 +5,7 @@ import NotFound from "./pages/NotFound/NotFound";
 import Layout from "./components/Layout/Layout";
 import Welcome from "./pages/Welcome/Welcome";
 import RequireAuth from "./components/RequireAuth/RequireAuth";
+import MoviesDetails from "./pages/MoviesDetails/MoviesDetails";
 
 const Home = React.lazy(() => import("./pages/Home/Home"));
 const Movies = React.lazy(() => import("./pages/Movies/Movies"));
@@ -22,10 +23,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/movie" element={<Movies />} />
+          <Route path="/movie/:movieId" element={<MoviesDetails />} />
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/movies" element={<Movies />} />
             <Route path="/bookmarked" element={<Bookmarked />} />
             <Route path="/tv-series" element={<TVSeries />} />
           </Route>

@@ -39,77 +39,11 @@ app.use("/register", require("./routes/register"));
 app.use("/auth", require("./routes/auth"));
 app.use("/refresh", require("./routes/refresh"));
 app.use("/logout", require("./routes/logout"));
-app.use("/movie", require("./routes/api/movie"));
+app.use("/tmdb", require("./routes/tmdb-auth"));
 
-const options = {
-  method: "POST",
-  url: "https://api.themoviedb.org/4/auth/request_token",
-  headers: {
-    accept: "application/json",
-    "content-type": "application/json",
-    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-  },
-  data: {
-    redirect_to: "http://localhost:5173/welcome",
-  },
-};
+const { handleApproval } = require("./controllers/tmdbController");
 
-app.get("/create-token", async (req, res) => {
-  try {
-    const response = await axios.request(options);
-    const requestToken = response.data.request_token;
-    getAccessTokenOptions.data.request_token = requestToken;
-
-    res.redirect(
-      `https://www.themoviedb.org/auth/access?request_token=${requestToken}`
-    );
-  } catch (error) {
-    console.error("Error obtaining request token:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-const getAccessTokenOptions = {
-  method: "POST",
-  url: "https://api.themoviedb.org/4/auth/access_token",
-  headers: {
-    accept: "application/json",
-    "content-type": "application/json",
-    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-  },
-  data: {
-    request_token: null,
-  },
-};
-
-app.get("/get-access-token", async (req, res) => {
-  try {
-    const response = await axios.request(getAccessTokenOptions);
-    const accessToken = response.data.access_token;
-
-    res.json({ access_token: accessToken });
-  } catch (error) {
-    console.error("Error obtaining access token:", error.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-const logoutOptions = {
-  method: "DELETE",
-  url: "https://api.themoviedb.org/4/auth/access_token",
-  headers: {
-    accept: "application/json",
-    "content-type": "application/json",
-    Authorization: `Bearer ${process.env.TMDB_ACCESS_TOKEN}`,
-  },
-};
-
-app.delete("/logout-tmdb"),
-  async (req, res) => {
-    await axios.request(logoutOptions);
-    res.json({ message: "Logout successful" });
-    try {
-    } catch (error) {}
-  };
+app.get("/api/approval", handleApproval);
 
 app.use(verifyJWT);
 app.use("/employees", require("./routes/api/employees"));

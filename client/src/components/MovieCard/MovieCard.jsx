@@ -2,12 +2,14 @@ import { Heading, Box, ListItem, List, Icon, Button } from "@chakra-ui/react";
 import { IconMovies, IconTv } from "../../config/customIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark } from "@fortawesome/free-solid-svg-icons";
+import { Link as ChakraLink } from "react-router-dom";
 
 const baseUrlForImages = "https://image.tmdb.org/t/p/w220_and_h330_face";
-const MovieCardTrending = ({ title, imageUrl, year, rating, mediaType }) => {
+
+const MovieCard = ({ title, imageUrl, year, rating, mediaType, id }) => {
   return (
     <>
-      <Box position={"relative"} w={150} h={225}>
+      <ChakraLink to={`movie/${id}`} position={"relative"} w={150} h={225}>
         <Box
           borderRadius={"10px"}
           bgImg={`${baseUrlForImages}${imageUrl}`}
@@ -56,9 +58,9 @@ const MovieCardTrending = ({ title, imageUrl, year, rating, mediaType }) => {
             {title}
           </Heading>
         </Box>
-      </Box>
+      </ChakraLink>
     </>
   );
 };
 
-export default MovieCardTrending;
+export default MovieCard;

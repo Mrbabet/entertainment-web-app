@@ -22,7 +22,6 @@ import {
 } from "@chakra-ui/react";
 import { Link as ChakraLink } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import styled from "@emotion/styled";
 
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
@@ -53,7 +52,8 @@ const Login = () => {
       setAuth({ email: userEmail, password, accessToken });
       setUserEmail("");
       setPassword("");
-      navigate("/", { replace: true });
+      const { approvalUrl } = await response.json();
+      navigate(approvalUrl);
     } catch (error) {
       if (!error?.response) {
         setErrMsg("No Server Response");

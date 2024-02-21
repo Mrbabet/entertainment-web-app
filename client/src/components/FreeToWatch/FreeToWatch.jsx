@@ -18,19 +18,21 @@ const FreeToWatch = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedTab, setSelectedTab] = useState("movies");
+  const [selectedTab, setSelectedTab] = useState("movie");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`https://api.themoviedb.org/3/movie`, {
-          params: { language: "en-US" },
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN_AUTH}`,
-          },
-        });
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_watch_monetization_types=free,`,
+          {
+            headers: {
+              accept: "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_ACCESS_TOKEN_AUTH}`,
+            },
+          }
+        );
         setData(response.data.results);
         setLoading(false);
       } catch (error) {
@@ -40,9 +42,8 @@ const FreeToWatch = () => {
     fetchData();
   }, [selectedTab]);
 
-  console.log(data);
   const handleTabChange = (index) => {
-    setSelectedTab(index === 0 ? "movies" : "tv");
+    setSelectedTab(index === 0 ? "movie" : "tv");
   };
 
   return (

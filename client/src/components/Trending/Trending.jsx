@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 
 import MovieCard from "../MovieCard/MovieCard";
@@ -39,13 +38,11 @@ const Trending = () => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
       }
     };
     fetchData();
   }, [selectedTab]);
 
-  console.log(loading);
   const handleTabChange = (index) => {
     setSelectedTab(index === 0 ? "day" : "week");
   };
@@ -71,6 +68,7 @@ const Trending = () => {
                     movie.release_date &&
                     movie.title && (
                       <MovieCard
+                        id={movie.id}
                         year={movie.release_date}
                         mediaType={movie.media_type}
                         rating={movie.vote_average}
@@ -92,6 +90,7 @@ const Trending = () => {
                     movie.release_date &&
                     movie.title && (
                       <MovieCard
+                        id={movie.id}
                         year={movie.release_date}
                         mediaType={movie.media_type}
                         rating={movie.vote_average}
